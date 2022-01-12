@@ -26,9 +26,9 @@ function __rendergeodesics(
     image
 end
 
-function render_into!(loc, m::AbstractMetricParams{T}, u, v; max_time, vf, solver_opts...)
+function render_into!(loc, m::AbstractMetricParams{T}, u, v; max_time, vf, solver_opts...) where {T}
     simsols = tracegeodesics(m, u, v, (0.0, max_time); save_on=false, solver_opts...)
-    Threads.@threads for (i, s) in enumerate(simsols)
+    @threads for (i, s) in enumerate(simsols)
         loc[i] = s.t[end]
     end
 end

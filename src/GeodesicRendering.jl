@@ -1,8 +1,11 @@
 module GeodesicRendering
 
-using Threads
+import Base.Threads: @threads
 
-function rendergeodesics(m::AbstractMetricParams{T}, init_pos; kwargs...)
+using GeodesicBase
+using GeodesicTracer
+
+function rendergeodesics(m::AbstractMetricParams{T}, init_pos; kwargs...) where {T}
     __rendergeodesics(
         m,
         init_pos;

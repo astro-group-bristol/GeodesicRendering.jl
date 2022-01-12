@@ -290,7 +290,7 @@ version = "0.1.0"
 
 [[deps.GeodesicTracer]]
 deps = ["DifferentialEquations", "DocStringExtensions", "GeodesicBase", "JuliaFormatter", "Parameters", "StaticArrays"]
-git-tree-sha1 = "0aaf9d6ecc994291a249756b317099b8f30ef076"
+git-tree-sha1 = "422c1c47cd1121fddd6cc061219032831e52a081"
 repo-rev = "fergus/refactor"
 repo-url = "/Users/cosroe/Developer/BlackHoleEcoSystem/TestProj/dev/GeodesicTracer"
 uuid = "1f548346-32cf-4117-8ecc-304cf7418187"
