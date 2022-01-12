@@ -6,12 +6,14 @@ using GeodesicBase
 using GeodesicTracer
 
 include("utility.jl")
+include("value-functions.jl")
 include("render.jl")
 
 function rendergeodesics(
     m::AbstractMetricParams{T},
     init_pos,
-    max_time;
+    max_time::T;
+    vf = ConstValueFunctions.shadow,
     kwargs...,
 ) where {T}
     __rendergeodesics(
@@ -21,7 +23,7 @@ function rendergeodesics(
         image_height = 250,
         fov_factor = 3.0,
         max_time = max_time,
-        vf = nothing,
+        vf = vf,
         kwargs...,
     )
 end

@@ -6,7 +6,7 @@ function __rendergeodesics(
     fov_factor,
     kwargs...,
 ) where {T}
-    image = zeros(Float64, (image_height, image_width))
+    image = zeros(T, (image_height, image_width))
     y_mid = image_height ÷ 2
     x_mid = image_width ÷ 2
 
@@ -33,6 +33,6 @@ function render_into!(
 ) where {T}
     simsols = tracegeodesics(m, u, v, (T(0.0), max_time); save_on = false, solver_opts...)
     @threads for i = 1:length(simsols)
-        loc[i] = simsols[i].t[end]
+        loc[i] = vf(m, simsols[i], max_time)
     end
 end
