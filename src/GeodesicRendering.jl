@@ -5,6 +5,9 @@ import Base.Threads: @threads
 using GeodesicBase
 using GeodesicTracer
 
+include("utility.jl")
+include("render.jl")
+
 function rendergeodesics(m::AbstractMetricParams{T}, init_pos; kwargs...) where {T}
     __rendergeodesics(
         m,
