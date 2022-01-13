@@ -11,12 +11,16 @@ function __rendergeodesics(
     x_mid = image_width ÷ 2
 
     # have to use a slight 0.01 offset to avoid integrating α=0.0 geodesics
+    count = 0
     for Y = 1:image_height
         β = (Y - y_mid) / fov_factor
         α_generator_row = ((X + 0.001 - x_mid) / fov_factor for X = 1:image_width)
         vs = generate_velocity_row(m, init_pos, α_generator_row, β)
         us = fill(init_pos, size(vs))
         render_into!(@view(image[Y, :]), m, us, vs; kwargs...)
+
+        count += 1
+        println("+ $count / $image_height ...")
     end
 
     image

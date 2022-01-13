@@ -9,15 +9,21 @@ struct FilterValueFunction{F,T} <: AbstractValueFunction
     default::T
 end
 
-@inline function (vf::AbstractValueFunction)(m::AbstractMetricParams{T}, sol, max_time; kwargs...)::T where {T}
+@inline function (vf::AbstractValueFunction)(
+    m::AbstractMetricParams{T},
+    sol,
+    max_time;
+    kwargs...,
+)::T where {T}
     convert(T, vf.f(m, sol, max_time; kwargs...))
 end
 
-@inline function Base.:∘(vf1::AbstractValueFunction, vf2::AbstractValueFunction) where {F1,F2}
+@inline function Base.:∘(
+    vf1::AbstractValueFunction,
+    vf2::AbstractValueFunction,
+) where {F1,F2}
     ValueFunction(
-        (m, sol, max_time; kwargs...) -> vf1.f(
-            vf2.f(m, sol, max_time; kwargs...)
-        )
+        (m, sol, max_time; kwargs...) -> vf1.f(vf2.f(m, sol, max_time; kwargs...)),
     )
 end
 
@@ -25,26 +31,26 @@ end
     ValueFunction(
         (m, sol, max_time; kwargs...) -> begin
             pass_on = vf2.f(m, sol, max_time; kwargs...)
-            if pass_on 
+            if pass_on
                 vf1.f(m, sol, max_time; kwargs...)
             else
                 vf2.default
             end
-        end
+        end,
     )
 end
 
 module ConstValueFunctions
-    import ..GeodesicRendering: ValueFunction, FilterValueFunction
+import ..GeodesicRendering: ValueFunction, FilterValueFunction
 
-    const filter_early_term = FilterValueFunction(
-        (m, sol, max_time; kwargs...) -> sol.t[end] < max_time,
-        NaN
-    )
-    const affine_time = ValueFunction(
-        (m, sol, max_time; kwargs...) -> sol.t[end]
-    )
-    const shadow = affine_time ∘ filter_early_term
+const filter_early_term =
+    FilterValueFunction((m, sol, max_time; kwargs...) -> sol.t[end] < max_time, NaN)
+
+const affine_time = ValueFunction((m, sol, max_time; kwargs...) -> sol.t[end])
+
+const last_u = ValueFunction((m, sol, max_time; kwargs...) -> u)
+
+const shadow = affine_time ∘ filter_early_term
 end # module
 
 export ValueFunction, FilterValueFunction, ConstValueFunctions
