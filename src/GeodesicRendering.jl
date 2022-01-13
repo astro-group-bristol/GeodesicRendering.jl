@@ -12,7 +12,7 @@ include("render.jl")
 function rendergeodesics(
     m::AbstractMetricParams{T},
     init_pos,
-    max_time::T;
+    max_time;
     vf = ConstValueFunctions.shadow,
     kwargs...,
 ) where {T}
@@ -22,7 +22,7 @@ function rendergeodesics(
         image_width = 350,
         image_height = 250,
         fov_factor = 3.0,
-        max_time = max_time,
+        max_time = convert(T, max_time),
         vf = vf,
         kwargs...,
     )
