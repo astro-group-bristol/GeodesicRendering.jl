@@ -46,6 +46,9 @@ import ..GeodesicRendering: ValueFunction, FilterValueFunction
 const filter_early_term =
     FilterValueFunction((m, sol, max_time; kwargs...) -> sol.t[end] < max_time, NaN)
 
+const filter_intersected = 
+    FilterValueFunction((m, sol, max_time; kwargs...) -> sol.retcode == :Intersected, NaN)
+
 const affine_time = ValueFunction((m, sol, max_time; kwargs...) -> sol.t[end])
 
 const last_u = ValueFunction((m, sol, max_time; kwargs...) -> u)
