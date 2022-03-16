@@ -11,7 +11,7 @@ using GeodesicTracer
 
 include("utility.jl")
 include("render-cache.jl")
-include("value-functions.jl")
+include("point-functions.jl")
 include("render.jl")
 
 
@@ -38,11 +38,13 @@ function prerendergeodesics(
     m::AbstractMetricParams{T},
     init_pos,
     max_time;
+    cache = DefaultCache(),
     kwargs...,
 ) where {T}
-    __pre_rendergeodesics(
+    __prerendergeodesics(
         m,
-        init_pos;
+        init_pos,
+        cache;
         image_width = 350,
         image_height = 250,
         fov_factor = 3.0,

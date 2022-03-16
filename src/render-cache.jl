@@ -1,7 +1,12 @@
-abstract type AbstractRenderCache{M,T,G} end
+abstract type AbstractCacheStrategy end
 
+struct DefaultCache <: AbstractCacheStrategy end
+struct SolutionCache <: AbstractCacheStrategy end
+struct EndpointCache <: AbstractCacheStrategy end
 
-struct RenderCache{M,T,G} <: AbstractRenderCache{M,T,G}
+abstract type AbstractRenderCache{M,T} end
+
+struct SolutionRenderCache{M,T,G} <: AbstractRenderCache{M,T}
     # metric
     m::M
 
@@ -13,9 +18,9 @@ struct RenderCache{M,T,G} <: AbstractRenderCache{M,T,G}
     width::Int
 
     # geodesics themselves in 2d array
-    geodesics::AbstractArray{G,2}
+    geodesics::AbstractMatrix{G}
 
-    function RenderCache(
+    function SolutionRenderCache(
         m::AbstractMetricParams{T},
         max_time::T,
         height,
@@ -35,10 +40,23 @@ struct RenderCache{M,T,G} <: AbstractRenderCache{M,T,G}
         # return instance 
         new{typeof(m),T,O}(m, max_time, height, width, geodesics)
     end
-
 end
 
-function Base.show(io::IO, rc::RenderCache{M,G}) where {M,G}
-    repr = "RenderCache{$M} (dimensions $(rc.height)x$(rc.width))"
+struct EndpointRenderCache{M,T,P} <: AbstractRenderCache{M,T}
+    # metric
+    m::M
+
+    # max time
+    max_time::T
+
+    # size information
+    height::Int
+    width::Int
+
+    points::Matrix{P}
+end
+
+function Base.show(io::IO, cache::AbstractRenderCache{M}) where {M}
+    repr = "$(Base.typename(typeof(cache)).name){$M} (dimensions $(cache.height)x$(cache.width))"
     write(io, repr)
 end
