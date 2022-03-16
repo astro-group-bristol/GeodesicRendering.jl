@@ -18,6 +18,12 @@ end
     convert(T, vf.f(m, sol, max_time; kwargs...))
 end
 
+@inline function apply(vf::AbstractValueFunction,
+    rc::RenderCache{M,T,G}; kwargs...
+) where {M,T,G}
+    map(sol -> vf.f(rc.m, sol, rc.max_time; kwargs...), rc.geodesics)
+end
+
 @inline function Base.:∘(
     vf1::AbstractValueFunction,
     vf2::AbstractValueFunction,
