@@ -1,7 +1,7 @@
 name = "GeodesicRendering"
 uuid = "dcac253f-9cde-4166-a841-20d11661ef48"
 authors = ["fjebaker <fergusbkr@gmail.com>"]
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 GeodesicBase = "1f539516-e6d2-4f24-ab09-50f3ac3c4a5a"
