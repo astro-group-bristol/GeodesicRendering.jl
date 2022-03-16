@@ -175,6 +175,6 @@ end
 
 function apply_to_location!(m::AbstractMetricParams{T}, loc, sols, vf, max_time) where {T}
     @threads for i = 1:length(sols)
-        loc[i] = vf(m, sols[i], max_time)
+        loc[i] = vf(m, get_endpoint(m, sols[i]), max_time)
     end
 end
