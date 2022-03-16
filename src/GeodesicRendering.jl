@@ -2,12 +2,18 @@ module GeodesicRendering
 
 import Base.Threads: @threads
 
+using Parameters
+
+import SciMLBase
+
 using GeodesicBase
 using GeodesicTracer
 
 include("utility.jl")
+include("render-cache.jl")
 include("value-functions.jl")
 include("render.jl")
+
 
 function rendergeodesics(
     m::AbstractMetricParams{T},
@@ -28,7 +34,24 @@ function rendergeodesics(
     )
 end
 
+function prerendergeodesics(
+    m::AbstractMetricParams{T},
+    init_pos,
+    max_time;
+    kwargs...,
+) where {T}
+    __pre_rendergeodesics(
+        m,
+        init_pos;
+        image_width = 350,
+        image_height = 250,
+        fov_factor = 3.0,
+        max_time = convert(T, max_time),
+        kwargs...,
+    )
+end
 
-export rendergeodesics
+
+export rendergeodesics, prerendergeodesics
 
 end # module
