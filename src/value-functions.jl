@@ -18,8 +18,10 @@ end
     convert(T, vf.f(m, sol, max_time; kwargs...))
 end
 
-@inline function apply(vf::AbstractValueFunction,
-    rc::RenderCache{M,T,G}; kwargs...
+@inline function apply(
+    vf::AbstractValueFunction,
+    rc::RenderCache{M,T,G};
+    kwargs...,
 ) where {M,T,G}
     map(sol -> vf.f(rc.m, sol, rc.max_time; kwargs...), rc.geodesics)
 end
@@ -52,7 +54,7 @@ import ..GeodesicRendering: ValueFunction, FilterValueFunction
 const filter_early_term =
     FilterValueFunction((m, sol, max_time; kwargs...) -> sol.t[end] < max_time, NaN)
 
-const filter_intersected = 
+const filter_intersected =
     FilterValueFunction((m, sol, max_time; kwargs...) -> sol.retcode == :Intersected, NaN)
 
 const affine_time = ValueFunction((m, sol, max_time; kwargs...) -> sol.t[end])

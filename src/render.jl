@@ -6,7 +6,14 @@ function __rendergeodesics(
     kwargs...,
 ) where {T}
     image = zeros(T, (image_height, image_width))
-    render_into_image!(m, init_pos, image; image_width = image_width, image_height = image_height, kwargs...)
+    render_into_image!(
+        m,
+        init_pos,
+        image;
+        image_width = image_width,
+        image_height = image_height,
+        kwargs...,
+    )
 end
 
 function __pre_rendergeodesics(
@@ -32,30 +39,36 @@ function __pre_rendergeodesics(
     us = fill(init_pos, image_width)
 
     simsol_array = map(1:image_height) do Y
-        
+
         β = T(y_to_β(Y, y_mid, fov_factor))
         α_generator_row = (T(x_to_α(X, x_mid, fov_factor)) for X = 1:image_width)
 
         calculate_velocities!(vs, m, init_pos, α_generator_row, β)
-        simsols = tracegeodesics(m, us, vs, (T(0.0), max_time); save_on = false, solver_opts...)
+        simsols = tracegeodesics(
+            m,
+            us,
+            vs,
+            (T(0.0), max_time);
+            save_on = false,
+            solver_opts...,
+        )
         println("+ $Y / $image_height ...")
         simsols
     end
-    
+
     RenderCache(m, max_time, image_height, image_width, simsol_array)
 end
 
 function render_into_image!(
     m::AbstractMetricParams{T},
     init_pos,
-    image
-    ;
+    image;
     image_width,
     image_height,
     fov_factor,
     max_time,
     vf,
-    solver_opts...
+    solver_opts...,
 ) where {T}
     y_mid = image_height ÷ 2
     x_mid = image_width ÷ 2
@@ -63,14 +76,15 @@ function render_into_image!(
     vs = fill(init_pos, image_width)
     us = fill(init_pos, image_width)
     for Y = 1:image_height
-        
+
         β = T(y_to_β(Y, y_mid, fov_factor))
         α_generator_row = (T(x_to_α(X, x_mid, fov_factor)) for X = 1:image_width)
 
         calculate_velocities!(vs, m, init_pos, α_generator_row, β)
 
         # do the render
-        simsols = tracegeodesics(m, us, vs, (T(0.0), max_time); save_on = false, solver_opts...)
+        simsols =
+            tracegeodesics(m, us, vs, (T(0.0), max_time); save_on = false, solver_opts...)
         apply_to_location!(m, @view(image[Y, :]), simsols, vf, max_time)
 
         println("+ $Y / $image_height ...")
@@ -84,4 +98,3 @@ function apply_to_location!(m::AbstractMetricParams{T}, loc, sols, vf, max_time)
         loc[i] = vf(m, sols[i], max_time)
     end
 end
-

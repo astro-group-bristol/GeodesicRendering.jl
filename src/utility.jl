@@ -10,8 +10,8 @@ end
 function calculate_velocities(
     m::AbstractMetricParams{T},
     init_pos,
-    α_genetator, 
-    β_generator
+    α_genetator,
+    β_generator,
 ) where {T}
     [map_impact_parameters(m, init_pos, α, β) for α in α_genetator, β in β_generator]
 end

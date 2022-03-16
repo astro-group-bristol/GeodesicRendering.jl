@@ -13,18 +13,18 @@ struct RenderCache{M,T,G} <: AbstractRenderCache{M,T,G}
     width::Int
 
     # geodesics themselves in 2d array
-    geodesics::AbstractArray{G, 2}
+    geodesics::AbstractArray{G,2}
 
     function RenderCache(
-        m::AbstractMetricParams{T}, 
+        m::AbstractMetricParams{T},
         max_time::T,
-        height, 
+        height,
         width,
-        cache::AbstractVector{SciMLBase.EnsembleSolution{T, N, Vector{O}}}, 
-        ) where {T, N, O}
+        cache::AbstractVector{SciMLBase.EnsembleSolution{T,N,Vector{O}}},
+    ) where {T,N,O}
 
         geodesics = Matrix{O}(undef, (height, width))
-        
+
         # populate store
         for (col, simsol) in enumerate(cache)
             for (row, sol) in enumerate(simsol)
@@ -38,9 +38,7 @@ struct RenderCache{M,T,G} <: AbstractRenderCache{M,T,G}
 
 end
 
-function Base.show(io::IO, rc::RenderCache{M, G}) where {M, G}
+function Base.show(io::IO, rc::RenderCache{M,G}) where {M,G}
     repr = "RenderCache{$M} (dimensions $(rc.height)x$(rc.width))"
     write(io, repr)
 end
-
-
